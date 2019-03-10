@@ -31,6 +31,7 @@ int length(List *L)
     return j;
 }
 
+
 List *find(datatype x, List *L)
 {
     List *p = L;
@@ -105,6 +106,23 @@ void print_list(List *L)
     printf("\n");
 }
 
+List* inverse(List *L)
+{
+    List *p = L;
+    List *q = NULL;
+    List *head = NULL;
+
+    while (p)
+    {
+        q = p->next;
+        p->next = head;
+        head = p;
+        p = q;
+    }
+
+    return head;
+}
+
 int main()
 {
     int i = 0;
@@ -132,6 +150,10 @@ int main()
     {
         printf("%f is not found\n", x);
     }
+
+    // printf("inverse it: ");
+    // List* iL = inverse(L);
+    // print_list(iL);
 
     return 1;
 }

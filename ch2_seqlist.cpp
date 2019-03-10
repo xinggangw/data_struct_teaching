@@ -70,7 +70,10 @@ int main()
     
     print_seqlist(L);
   
-  return 1;
+    insert_seqlist(L, 5, 222);
+    print_seqlist(L);
+
+    return 1;
 }
 
 
