@@ -2,7 +2,7 @@
 * @Author: Song Dejia
 * @Date:   2019-03-12 00:27:27
 * @Last Modified by:   Song Dejia
-* @Last Modified time: 2019-03-12 02:51:24
+* @Last Modified time: 2019-03-12 02:53:59
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -116,7 +116,11 @@ int main(){
 	M.data[8].j = 4;
 	M.data[8].data = -7;
 
-	fastTransposeMatrix(M, T);
+	bool status = fastTransposeMatrix(M, T);
+	if(!status){
+		cout << "Transpose Fail !!!" << endl;
+		exit(0);
+	}
 
 	//show
 	int M1[36], T1[36];
@@ -143,7 +147,6 @@ int main(){
 
 
 	cout << "++++++++++++++ Transposed Matrix ++++++++++++" <<endl;
-
 	for(int index = 1; index <= 8; ++index){
 		int r = T->data[index].i - 1;
 		int c = T->data[index].j;
@@ -158,7 +161,6 @@ int main(){
 		if(c == 5) cout << T1[index] << endl;
 		else cout << T1[index] << '\t';
 	}
-
 	return 0;
 }
 
