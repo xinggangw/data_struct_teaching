@@ -13,7 +13,7 @@ using namespace std;
 /* 定义三元组 */
 typedef struct{
 	int i, j;
-	int data; 
+	int val; 
 }triple;
 
 /* 定义用三元组压缩存储的矩阵*/
@@ -30,12 +30,12 @@ typedef struct{
  #     转置成功 则返回True,否则false
  */
 bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
-	if(NULL == T || M.data[0].i < 1 || M.data[0].j < 1 || M.data[0].data < 1) return false;
+	if(NULL == T || M.data[0].i < 1 || M.data[0].j < 1 || M.data[0].val < 1) return false;
 	
 	//矩阵行数列数互换, 非0值不变
 	T->data[0].i = M.data[0].j;
 	T->data[0].j = M.data[0].i;
-	T->data[0].data = M.data[0].data;
+	T->data[0].val = M.data[0].val;
 
 	//1.初始化
 	//按列初始化为0, 其余值未赋值.这里注意
@@ -46,7 +46,7 @@ bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
 	//2.计算辅助向量num,从三元组中去遍历时间复杂度更低
 	//注意 data[0] 表示的是rows, cols, num. 
 	//data[x].j 从1开始
-	for(int t = 1; t <= M.data[0].data; t++){
+	for(int t = 1; t <= M.data[0].val; t++){
 		int j = M.data[t].j;
 		array[j]++;
 	}
@@ -58,12 +58,12 @@ bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
 	for(int col = 2; col <= M.data[0].j; col++) cpos[col] = cpos[col - 1] + array[col - 1];
 
 	//4.赋值
-	for(int p = 1; p <= M.data[0].data; p++){
+	for(int p = 1; p <= M.data[0].val; p++){
 		int col = M.data[p].j;
 		int q = cpos[col];
 		T->data[q].i = M.data[p].j;
 		T->data[q].j = M.data[p].i;
-		T->data[q].data = M.data[p].data;
+		T->data[q].val = M.data[p].val;
 		cpos[col]++;
 	}
 	
@@ -77,48 +77,48 @@ int main(){
 
 	M.data[0].i = 6;
 	M.data[0].j = 6;
-	M.data[0].data = 8;
-    if (M.data[0].data > MAX_SIZE)
+	M.data[0].val = 8;
+    if (M.data[0].val > MAX_SIZE)
     {
         printf("error: non zero iterms exceeds matrix capacity\n");
         return 0;
     }
-    if (M.data[0].data > 0.3*M.data[0].i*M.data[0].j)
+    if (M.data[0].val > 0.3*M.data[0].i*M.data[0].j)
     {
         printf("warning: the matrix is not so sparse, you may try naive matrix transpose algorithm\n");
     }
 
 	M.data[1].i = 1;
 	M.data[1].j = 2;
-	M.data[1].data = 12;
+	M.data[1].val = 12;
 
 	M.data[2].i = 1;
 	M.data[2].j = 3;
-	M.data[2].data = 9;
+	M.data[2].val = 9;
 
 	M.data[3].i = 3;
 	M.data[3].j = 1;
-	M.data[3].data = -3;
+	M.data[3].val = -3;
 
 	M.data[4].i = 3;
 	M.data[4].j = 5;
-	M.data[4].data = 14;
+	M.data[4].val = 14;
 
 	M.data[5].i = 4;
 	M.data[5].j = 3;
-	M.data[5].data = 24;
+	M.data[5].val = 24;
 
 	M.data[6].i = 5;
 	M.data[6].j = 2;
-	M.data[6].data = 18;	
+	M.data[6].val = 18;	
 
 	M.data[7].i = 6;
 	M.data[7].j = 1;
-	M.data[7].data = 15;
+	M.data[7].val = 15;
 
 	M.data[8].i = 6;
 	M.data[8].j = 4;
-	M.data[8].data = -7;
+	M.data[8].val = -7;
 
 	bool status = fastTransposeMatrix(M, T);
 	if(!status){
@@ -137,7 +137,7 @@ int main(){
 	for(int index = 1; index <= 8; ++index){
 		int r = M.data[index].i - 1;
 		int c = M.data[index].j;
-		int v = M.data[index].data;
+		int v = M.data[index].val;
 		int id = r * 6 + c - 1;
 		M1[id] = v;
 	}
@@ -154,7 +154,7 @@ int main(){
 	for(int index = 1; index <= 8; ++index){
 		int r = T->data[index].i - 1;
 		int c = T->data[index].j;
-		int v = T->data[index].data;
+		int v = T->data[index].val;
 		int id = r * 6 + c - 1;
 		T1[id] = v;
 	}
