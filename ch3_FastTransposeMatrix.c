@@ -70,13 +70,43 @@ bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
 	return true;
 }
 
+void show_matrix(TSMatrix* pM)
+{
+	//show
+    int rows = pM->data[0].i;
+    int cols = pM->data[0].j;
+    int cnt  = pM->data[0].val;
+    int size = rows * cols;
+    
+	int M1[size];
+	for(int i = 0; i < size; ++i){
+		M1[i] = 0;
+	}
+
+	for(int index = 1; index <= cnt; ++index){
+		int r = pM->data[index].i - 1;
+		int c = pM->data[index].j;
+		int v = pM->data[index].val;
+		int id = r * cols + c - 1;
+		M1[id] = v;
+	}
+
+	for(int index = 0; index < size; ++index){
+		int r = int(index / rows);
+		int c = int(index % cols);
+		if(c == cols-1) cout << M1[index] << endl;
+		else cout << M1[index] << '\t';
+	}
+}
+
+
 int main(){
 	TSMatrix M;
 	TSMatrix *T = (TSMatrix*)malloc(sizeof(TSMatrix));
 	if(T == NULL) exit(0);//判断是否分配成功
 
-	M.data[0].i = 6;
-	M.data[0].j = 6;
+	M.data[0].i = 8;
+	M.data[0].j = 9;
 	M.data[0].val = 8;
     if (M.data[0].val > MAX_SIZE)
     {
@@ -126,45 +156,12 @@ int main(){
 		exit(0);
 	}
 
-	//show
-	int M1[36], T1[36];
-	for(int i = 0; i < 36; ++i){
-		M1[i] = 0;
-		T1[i] = 0;
-	}
+    printf("Original matrix\n");
+    show_matrix(&M);
 
-	cout << "++++++++++++++ Original Matrix ++++++++++++" <<endl;
-	for(int index = 1; index <= 8; ++index){
-		int r = M.data[index].i - 1;
-		int c = M.data[index].j;
-		int v = M.data[index].val;
-		int id = r * 6 + c - 1;
-		M1[id] = v;
-	}
+    printf("Transposed matrix\n");
+    show_matrix(T);
 
-	for(int index = 0; index <= 35; ++index){
-		int r = int(index / 6);
-		int c = int(index % 6);
-		if(c == 5) cout << M1[index] << endl;
-		else cout << M1[index] << '\t';
-	}
-
-
-	cout << "++++++++++++++ Transposed Matrix ++++++++++++" <<endl;
-	for(int index = 1; index <= 8; ++index){
-		int r = T->data[index].i - 1;
-		int c = T->data[index].j;
-		int v = T->data[index].val;
-		int id = r * 6 + c - 1;
-		T1[id] = v;
-	}
-
-	for(int index = 0; index <= 35; ++index){
-		int r = int(index / 6);
-		int c = int(index % 6);
-		if(c == 5) cout << T1[index] << endl;
-		else cout << T1[index] << '\t';
-	}
 	return 0;
 }
 
