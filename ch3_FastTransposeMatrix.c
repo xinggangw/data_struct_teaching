@@ -7,7 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#define number 10 //默认初始化三元组长度10(可修改)
+#define MAX_SIZE 15 //默认初始化三元组长度10(可修改)
+
 using namespace std;
 /* 定义三元组 */
 typedef struct{
@@ -17,7 +18,7 @@ typedef struct{
 
 /* 定义用三元组压缩存储的矩阵*/
 typedef struct{
-	triple data[number]; //三元组顺序表,data[0]表示矩阵行数，列数，非零元素个数
+	triple data[MAX_SIZE]; //三元组顺序表,data[0]表示矩阵行数，列数，非零元素个数
 }TSMatrix;
 
 /*
@@ -40,13 +41,7 @@ bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
 	//按列初始化为0, 其余值未赋值.这里注意
 	//编译器有可能会把它置为0，所以未被赋值的地方要置为-1
 	//这里是从1开始索引，目的是方便用列序号直接查找
-	int array[number];
-	for(int col = 1; col <= M.data[0].j; col++) array[col] = 0; 
-
-	array[0] = -1;
-	if(M.data[0].j < number - 1){
-		for(int i = M.data[0].j + 1; i < number; ++i) array[i] = -1;
-	}
+	int array[M.data[0].j+1];
 
 	//2.计算辅助向量num,从三元组中去遍历时间复杂度更低
 	//注意 data[0] 表示的是rows, cols, num. 
@@ -57,19 +52,19 @@ bool fastTransposeMatrix(TSMatrix M, TSMatrix *T){
 	}
 
 	//3.计算辅助向量pos
-	int cpot[M.data[0].j+1];
-	cpot[0] = -1;
-	cpot[1] = 1;
-	for(int col = 2; col <= M.data[0].j; col++) cpot[col] = cpot[col - 1] + array[col - 1];
+	int cpos[M.data[0].j+1];
+	cpos[0] = -1;
+	cpos[1] = 1;
+	for(int col = 2; col <= M.data[0].j; col++) cpos[col] = cpos[col - 1] + array[col - 1];
 
 	//4.赋值
 	for(int p = 1; p <= M.data[0].data; p++){
 		int col = M.data[p].j;
-		int q = cpot[col];
+		int q = cpos[col];
 		T->data[q].i = M.data[p].j;
 		T->data[q].j = M.data[p].i;
 		T->data[q].data = M.data[p].data;
-		cpot[col]++;
+		cpos[col]++;
 	}
 	
 	return true;
@@ -83,6 +78,15 @@ int main(){
 	M.data[0].i = 6;
 	M.data[0].j = 6;
 	M.data[0].data = 8;
+    if (M.data[0].data > MAX_SIZE)
+    {
+        printf("error: non zero iterms exceeds matrix capacity\n");
+        return 0;
+    }
+    if (M.data[0].data > 0.3*M.data[0].i*M.data[0].j)
+    {
+        printf("warning: the matrix is not so sparse, you may try naive matrix transpose algorithm\n");
+    }
 
 	M.data[1].i = 1;
 	M.data[1].j = 2;
