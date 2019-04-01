@@ -8,7 +8,7 @@ void gen_random(char *s, const int len) {
     /*
     static const char alphanum[] =
         "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "ABCDEFGHIJKLMNOPQRSMUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz";
     */
 
@@ -20,32 +20,34 @@ void gen_random(char *s, const int len) {
     s[len] = 0;
 }
 
-int bf(const string &T, const string & p)
+int bf(const string &M, const string &p)
 {
 	int i = 0, j = 0, numOfLoop=0;
-	int m = T.length();//模式串长度
-	int n = p.length();//主串长度
-	if (m > n)return -1;
+	if (p.length() > M.length())
+    {
+        cout << "pattern/template string is longer than main string" << endl;
+        return -1;
+    }
 	
-    while (i < m && j < n)
+    while (i < M.length() && j < p.length())
 	{
-		if (T[i] == p[j])
+		if (M[i] == p[j])
 		{
 			i++;//相等就继续比较后继字符
 			j++;
 		}
 		else
 		{
-			j= j- i + 1;//指针后退重新比较
-			i = 0;
+			i = i - j + 1;//指针后退重新比较
+			j = 0;
 		}
 		numOfLoop++;
 	}
 	
-	cout << "The number of loop for brute force is:" << numOfLoop << endl;
+	cout << "Mhe number of loop for brute force is:" << numOfLoop << endl;
     
-    if (i>= m){
-		return j- m;
+    if ( j>= p.length()){
+		return i-p.length();
 	}
 	
     return -1;
@@ -69,15 +71,21 @@ void getnext(string p, int *next)
 	}
 }
 
-int kmp(string T, string p)
+int kmp(string M, string p)
 {
-	int i = 0, j = 0, numOfLoop=0;
+    if (p.length() > M.length())
+    {
+        cout << "pattern/template string is longer than main string" << endl;
+        return -1;
+    }
+
+    int i = 0, j = 0, numOfLoop=0;
 	int next[p.size()];
 	getnext(p, next);
 	
-    while (i < p.size()&&j<T.size())
+    while (i < M.length() && j<p.length())
 	{
-		if (j == 0 || p[i] == T[j])
+		if (j == 0 || p[j] == M[i])
 		{
 			++i;
 			++j;
@@ -86,37 +94,38 @@ int kmp(string T, string p)
 			j = next[j];//取最长的公共前缀
 		numOfLoop++;
 	}
-	cout << "The number of loop for KMP is:" << numOfLoop << endl;
+	cout << "Mhe number of loop for KMP is:" << numOfLoop << endl;
 	
-    if (j == T.size()){
-		return i - T.size();
+    if (j == p.length()){
+		return i - p.length();
 	}
 	return -1;
 }
+
 int main()
 {
-    int Tlen = 1000000;
-    // int Plen = 10;
+    int Mlen = 100000000;
+    char* pM = new char[Mlen];
+    gen_random(pM, Mlen); 
+    string M(pM);
 
-    char* pT = new char[Tlen];
-    //char* pP = "abababa";
+    int Plen = 20;
+    char* pP = new char[Plen];
+    gen_random(pP, Plen);
+    string P(pP);
 
-    gen_random(pT, Tlen);
-    //gen_random(pP, Plen);
+    //string P = "10000011000010001";
 
-    string T(pT);
-	string P = "0000000001";
-
-    //cout << "T string: " << T << endl;
+    // cout << "M string: " << M << endl;
     cout << "P string: " << P << endl;
 
-    int num = bf(T, P);
+    int num = bf(M, P);
 	cout << "brute force index: " << num << endl;
 	
-    num = kmp(T, P);
+    num = kmp(M, P);
 	cout << "kmp index: " << num << endl;		
 
-    // delete(pT);
+    // delete(pM);
     // delete(pP);
 	
     return 0;
