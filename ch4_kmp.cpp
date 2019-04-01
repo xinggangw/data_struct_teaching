@@ -1,7 +1,24 @@
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 using namespace std;
+
+void gen_random(char *s, const int len) {
+    /*
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    */
+
+    static const char alphanum[] = "01";
+    for (int i = 0; i < len; ++i) {
+        s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+
+    s[len] = 0;
+}
 
 int bf(const string &T, const string & p)
 {
@@ -9,7 +26,8 @@ int bf(const string &T, const string & p)
 	int m = T.length();//模式串长度
 	int n = p.length();//主串长度
 	if (m > n)return -1;
-	while (i < m && j < n)
+	
+    while (i < m && j < n)
 	{
 		if (T[i] == p[j])
 		{
@@ -23,11 +41,14 @@ int bf(const string &T, const string & p)
 		}
 		numOfLoop++;
 	}
-	if (i>= m){
-		cout << "The number of loop:" << numOfLoop << endl;
+	
+	cout << "The number of loop for brute force is:" << numOfLoop << endl;
+    
+    if (i>= m){
 		return j- m;
-		}
-	return -1;
+	}
+	
+    return -1;
 }
 
 
@@ -51,9 +72,10 @@ void getnext(string p, int *next)
 int kmp(string T, string p)
 {
 	int i = 0, j = 0, numOfLoop=0;
-	int next[100];
+	int next[p.size()];
 	getnext(p, next);
-	while (i < p.size()&&j<T.size())
+	
+    while (i < p.size()&&j<T.size())
 	{
 		if (j == 0 || p[i] == T[j])
 		{
@@ -64,22 +86,38 @@ int kmp(string T, string p)
 			j = next[j];//取最长的公共前缀
 		numOfLoop++;
 	}
-	if (j == T.size()){
-		cout << "The number of loop:" << numOfLoop << endl;
+	cout << "The number of loop for KMP is:" << numOfLoop << endl;
+	
+    if (j == T.size()){
 		return i - T.size();
-		}
+	}
 	return -1;
 }
 int main()
 {
-    string T = "ababaababcb";
-	string P = "ababc";
+    int Tlen = 1000000;
+    // int Plen = 10;
+
+    char* pT = new char[Tlen];
+    //char* pP = "abababa";
+
+    gen_random(pT, Tlen);
+    //gen_random(pP, Plen);
+
+    string T(pT);
+	string P = "0000000001";
+
+    //cout << "T string: " << T << endl;
+    cout << "P string: " << P << endl;
+
+    int num = bf(T, P);
+	cout << "brute force index: " << num << endl;
 	
-    int num = bf(P, T);
-	cout << "brute force: " << num;
-	
-    num = kmp(P, T);
-	cout << "kmp: " << num;			
+    num = kmp(T, P);
+	cout << "kmp index: " << num << endl;		
+
+    // delete(pT);
+    // delete(pP);
 	
     return 0;
 
