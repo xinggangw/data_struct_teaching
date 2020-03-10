@@ -57,7 +57,7 @@ void max3(int &x, int &y, int &z)
 int main()
 {
     int x, y, z;
-    x = 300; y = 40000; z = 1000;
+    x = 400000; y = -4; z = 1000;
     max3(x, y, z);
     printf("x = %d, y = %d, z = %d\n", x, y, z);
 }

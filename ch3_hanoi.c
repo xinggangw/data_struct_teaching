@@ -25,14 +25,13 @@ int main()
 {
     time_t begin, end;
     
-    int n = 10;
+    int n = 24;
     
     begin = clock();
     hanoi(n, 'x', 'y', 'z');
     end = clock();
     
     double spent = (double)(end-begin) / CLOCKS_PER_SEC;
-    
     printf("\ndepth = %d, time = %.3f seconds\n", n, spent);
 }
 
