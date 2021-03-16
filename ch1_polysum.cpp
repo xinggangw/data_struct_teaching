@@ -29,7 +29,7 @@ float f2(int n, float a[], float x)
 
 int main()
 {
-    int n = 100000;
+    int n = 10000000;
     float* a = (float *) malloc(sizeof(float)*(n+1));
     // init a
     for (int j=0; j<=n; ++j)
